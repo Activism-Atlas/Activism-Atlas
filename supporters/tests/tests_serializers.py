@@ -141,8 +141,12 @@ class DistrictSerializerTestCase(TestCase):
 
         """
         fake_payload = {
-            ''
+            'tag': 'KY1',
+            'name': 'KY District 1'
         }
+
+        serializer = DistrictSerializer(data=fake_payload)
+        self.assertTrue(serializer.is_valid())
 
     def test_serializer_should_update_district(self):
         pass

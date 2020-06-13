@@ -88,7 +88,7 @@ class SupporterSerializer(serializers.ModelSerializer):
     """
 
     address = AddressSerializer(required=False)
-    causes = CauseSerializer(reqired=False, many=True)
+    causes = CauseSerializer(required=False, many=True)
 
     class Meta:
         model = models.Supporter
