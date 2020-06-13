@@ -26,6 +26,8 @@ class Address(models.Model):
         null=True,
         blank=True
     )
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True, null=False)
 
 
 # *****************************************************************************
@@ -40,9 +42,11 @@ class Cause(models.Model):
 
     """
 
-    tag = models.CharField(null=True, blank=False, max_length=5)
+    tag = models.CharField(max_length=5, unique=True)
     name = models.CharField(null=False, blank=False, max_length=256)
     description = models.TextField(blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True, null=False)
 
 
 # *****************************************************************************
@@ -59,6 +63,8 @@ class District(models.Model):
 
     tag = models.CharField(null=False, blank=False, max_length=5)
     name = models.CharField(null=False, blank=False, max_length=256)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True, null=False)
 
 
 # *****************************************************************************
@@ -86,38 +92,11 @@ class Supporter(models.Model):
         null=True,
         blank=True
     )
-    causes = models.ForeignKey(
-        'SupporterCause', 
-        related_name='causes',
-        on_delete=models.CASCADE,
-        null=True, 
-        blank=True,
-    )
-
-
-# *****************************************************************************
-# SupporterCause
-# *****************************************************************************
-
-
-class SupporterCause(models.Model):
-
-    """
-    Model for SupporterCause object
-
-    """
-
-    supporter = models.ForeignKey(
-        Supporter, 
-        related_name='supporter', 
-        on_delete=models.DO_NOTHING,
-        null=False,
-        blank=False
-    )
-    cause = models.ForeignKey(
+    causes = models.ManyToManyField(
         Cause, 
-        related_name='cause',
-        on_delete=models.DO_NOTHING,
-        null=False,
-        blank=False
+        blank=True, 
+        null=True, 
+        related_name='supporters'
     )
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True, null=False)
