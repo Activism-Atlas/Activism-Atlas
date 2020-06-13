@@ -32,8 +32,8 @@ From hereafter, the main repository directory will just be described as "main di
 3. Setup your virtualenv:
     * Make sure you're in the main directory in your terminal.
     * Run the following command to create the virtualenv with correct Python version:
-        * `pyenv virtualenv 3.6.7 <name of virtualenv>`
-            * E.g., `pyenv virtualenv 3.6.7 activism-atlas`
+        * `pyenv virtualenv 3.7.3 <name of virtualenv>`
+            * E.g., `pyenv virtualenv 3.7.3 activism-atlas`
     * Run the following to set the virtualenv to the current directory:
         * `pyenv rehash`
         * `pyenv local <name of virtualenv>`
