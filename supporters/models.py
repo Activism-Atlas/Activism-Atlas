@@ -15,11 +15,17 @@ class Address(models.Model):
 
     """
 
-    street = models.CharField(blank=False, max_length=256)
-    city = models.CharField(blank=True, max_length=256)
-    zipcode = models.IntegerField(blank=False, max_length=5)
-    state = models.CharField(blank=True, max_length=256)
-    district = models.ForeignKey('District', related_name='district')
+    street = models.CharField(null=True, blank=True, max_length=256)
+    city = models.CharField(null=True, blank=True, max_length=256)
+    zipcode = models.PositiveIntegerField(null=True, blank=True)
+    state = models.CharField(null=True, blank=True, max_length=256)
+    district = models.ForeignKey(
+        'District', 
+        related_name='district', 
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
 
 # *****************************************************************************
@@ -34,8 +40,8 @@ class Cause(models.Model):
 
     """
 
-    tag = models.CharField(blank=False, max_length=5)
-    name = models.CharField(blank=False, max_length=256)
+    tag = models.CharField(null=True, blank=False, max_length=5)
+    name = models.CharField(null=False, blank=False, max_length=256)
     description = models.TextField(blank=True)
 
 
@@ -51,8 +57,8 @@ class District(models.Model):
     
     """
 
-    tag = models.CharField(blank=False, max_length=5)
-    name = models.CharField(blank=False, max_length=256)
+    tag = models.CharField(null=False, blank=False, max_length=5)
+    name = models.CharField(null=False, blank=False, max_length=256)
 
 
 # *****************************************************************************
@@ -68,18 +74,25 @@ class Supporter(models.Model):
     """
 
     is_active = models.BooleanField(default=True)
-    first_name = models.CharField(blank=True, max_length=256)
-    last_name = models.CharField(blank=True, max_length=256)
-    email = models.EmailField(blank=True, max_length=256)
+    first_name = models.CharField(null=True, blank=True, max_length=256)
+    last_name = models.CharField(null=True, blank=True, max_length=256)
+    email = models.EmailField(null=True, blank=True, max_length=256)
     # TODO: Better way to store phone number and validated
-    phonenumber = models.CharField(blank=True, max_length=15)
+    phonenumber = models.CharField(null=True, blank=True, max_length=15)
     address = models.ForeignKey(
         Address, 
         on_delete=models.CASCADE, 
-        related_name='address'
+        related_name='address',
+        null=True,
+        blank=True
     )
-    district = models.ForeignKey(District, related_name='district')
-    causes = models.ForeignKey('SupporterCause', related_name='causes')
+    causes = models.ForeignKey(
+        'SupporterCause', 
+        related_name='causes',
+        on_delete=models.CASCADE,
+        null=True, 
+        blank=True,
+    )
 
 
 # *****************************************************************************
@@ -94,6 +107,17 @@ class SupporterCause(models.Model):
 
     """
 
-    supporter = models.ForeignKey(Supporter, related_name='supporter')
-    cause = models.ForeignKey(Cause, related_name='cause')
-
+    supporter = models.ForeignKey(
+        Supporter, 
+        related_name='supporter', 
+        on_delete=models.DO_NOTHING,
+        null=False,
+        blank=False
+    )
+    cause = models.ForeignKey(
+        Cause, 
+        related_name='cause',
+        on_delete=models.DO_NOTHING,
+        null=False,
+        blank=False
+    )
