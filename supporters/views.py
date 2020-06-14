@@ -2,6 +2,7 @@
 # supporters/views.py
 # *****************************************************************************
 
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, viewsets, mixins, permissions
 from rest_framework.response import Response
 
@@ -51,6 +52,7 @@ class SupporterViewSet(mixins.CreateModelMixin,
     """
 
     filter_backend = (
+        DjangoFilterBackend,
         filters.OrderingFilter,
         filters.SearchFilter
     )
