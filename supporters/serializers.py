@@ -150,7 +150,7 @@ class SupporterSerializer(serializers.ModelSerializer):
         # Create Address if info provided
         if address_data is not None:
             district_data = address_data.pop('district', None)
-            district = self._get_and_create_district(district_data)
+            district = self._get_or_create_district(district_data)
             address_data['district'] = district
 
             address, _ = Address.objects.get_or_create(**address_data)
