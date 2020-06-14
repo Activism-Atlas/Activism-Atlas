@@ -43,6 +43,11 @@ class AddressSerializer(serializers.ModelSerializer):
 
     """
 
+    id = serializers.IntegerField(required=False)
+    street = serializers.CharField(required=True)
+    city = serializers.CharField(required=True)
+    zipcode = serializers.CharField(required=True)
+    state = serializers.CharField(required=True)
     district = DistrictSerializer(required=False)
 
     class Meta:
