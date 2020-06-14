@@ -159,7 +159,11 @@ class SupporterSerializer(serializers.ModelSerializer):
         
         # Create Cause objects if provided
         for cause in causes_data:
-            supporter.causes.add(**cause)
+            cause_id = cause.pop('id', None)
+            cause_obj, created = Cause.objects.get_or_create(
+                pk=cause_id, defaults={**cause}
+            )
+            supporter.causes.add(cause_obj)
         
         return supporter
     
