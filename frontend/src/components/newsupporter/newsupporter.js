@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-// @ts-ignore
+import { Link } from "react-router-dom";
 import styles from './newsupporter.module.css';
 import { Form, Col } from 'react-bootstrap';
 
@@ -86,7 +86,9 @@ export default class NewSupporter extends Component {
     // }
     return (
       <div className={styles.mainBodyInner}>
+
         <h3 className="text-center mb-3">Add a Supporter</h3>
+
         <form onSubmit={(e) => { this.createSupporter(e) }}>
           {/* Row for supporter name */}
           <div className="row">
