@@ -1,7 +1,7 @@
-import React from "react";
-import { Table, Form, Button, Dropdown } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import styles from "./home.module.css";
+import React from 'react'
+import { Table, Form, Button, Dropdown } from 'react-bootstrap';
+import styles from './home.module.css';
+import SupporterModal from '../modal/supportermodal'
 
 function home(props) {
   // console.log(props.supporters)
@@ -71,12 +71,7 @@ function home(props) {
         </div>
 
         <div className="col-6 d-flex justify-content-end">
-          <Button
-            type="submit"
-            className="mb-2 bg-secondary border-0 text-light"
-          >
-            Add Supporter
-          </Button>
+          <SupporterModal></SupporterModal>
         </div>
       </div>
 
