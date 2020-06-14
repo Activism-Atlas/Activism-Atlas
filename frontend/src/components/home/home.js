@@ -4,15 +4,26 @@ import styles from './home.module.css';
 import SupporterModal from '../modal/supportermodal'
 
 function home(props) {
-  const table = props.supporters.map(supporter => {
+  const formatPhoneNumber = (phoneNumberString) => {
+    var cleaned = ('' + phoneNumberString).replace(/\D/g, '')
+    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/)
+    if (match) {
+      var intlCode = (match[1] ? '+1 ' : '')
+      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('')
+    }
+    return null
+  }
+
+  const table = props.supporters.map((supporter, index) => {
+    const supporterNum = formatPhoneNumber(supporter.phonenumber);
     return (
-      <tr className={styles.bgColor}>
+      <tr className={styles.bgColor} key={index}>
         <td>Yes</td>
         <td>
           {supporter.first_name}, {supporter.last_name}
         </td>
-        <td>{supporter.phonenumber}</td>
-        <td>{supporter.email}</td>
+        <td>{supporterNum ? supporterNum : supporter.phonenumber}</td>
+        <td><a href={`mailto:${supporter.email}`}>{supporter.email}</a></td>
         <td>
           {" "}
           {supporter.address.city}, {supporter.address.state}

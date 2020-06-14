@@ -50,7 +50,6 @@ class App extends Component {
     };
     let response = await fetch(fetchUrl, settings);
     let apiData = await response.json();
-    console.log(apiData)
     this.setState({
       supporters: apiData
     })
