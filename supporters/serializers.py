@@ -101,3 +101,15 @@ class SupporterSerializer(serializers.ModelSerializer):
             'address',
             'causes',
         )
+
+    #Add create for nested serializer 
+    def create(self, validated_data):
+        causes_data = validated_data.pop('causes')
+        address_data = validated_data.pop('address')
+        supporter = models.Supporter.objects.create(**validated_data)
+        #need to create a district instance also to add to the address
+        supporter.address = models.Address.objects.create(**address_data)
+        # supporter.address.add(**address_data)
+        for cause_data in causes_data:
+            supporter.causes.add(**cause_data)
+        return supporter
