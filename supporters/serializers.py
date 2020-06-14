@@ -128,13 +128,20 @@ class SupporterSerializer(serializers.ModelSerializer):
             return
         
         district_id = data.pop('id', None)
-        if not district_id:
-            district = District.objects.create(**data)
+        district = District.objects.filter(
+            tag=data.get('tag'),
+            name=data.get('name')
+        )
+        if district:
+            district = district.last()
         else:
-            district = District.objects.get(id=district_id)
+            district = District.objects.create(**data)
 
         return district
 
+    # TODO: There's probably a better way to do this. Need to
+    # update relationships and make sure each object uniqueness makes
+    # sense.
     def create(self, validated_data):
         """
         Override to create related address and causes
@@ -150,16 +157,35 @@ class SupporterSerializer(serializers.ModelSerializer):
         # Create Address if info provided
         if address_data is not None:
             district_data = address_data.pop('district', None)
-            district = self._get_and_create_district(district_data)
+            district = self._get_or_create_district(district_data)
             address_data['district'] = district
 
-            address, _ = Address.objects.get_or_create(**address_data)
+            address_id = address_data.pop('id', None)
+            address = Address.objects.filter(
+                street=address_data.get('street'),
+                city=address_data.get('city'),
+                zipcode=address_data.get('zipcode'),
+                state=address_data.get('state'),
+                district_id=district.id if district else None
+            ).last()
+            if not address:
+                address = Address.objects.create(**address_data)
+            
             supporter.address = address
             supporter.save(update_fields=['address'])
         
         # Create Cause objects if provided
         for cause in causes_data:
-            supporter.causes.add(**cause)
+            cause_id = cause.pop('id', None)
+            existing_cause = Cause.objects.filter(
+                tag=cause.get('tag'), name=cause.get('name')
+            )
+            if existing_cause:
+                cause_obj = existing_cause.last()
+            else:
+                cause_obj = Cause.objects.create(**cause)
+            
+            supporter.causes.add(cause_obj)
         
         return supporter
     
@@ -182,16 +208,22 @@ class SupporterSerializer(serializers.ModelSerializer):
             district = self._get_or_create_district(district_data)
             address_data['district'] = district
 
-            address_id = address_data.pop('id', None)
-            if address_id:
-                address = Address.objects.get(id=address_id)
+            address_obj = Address.objects.filter(
+                street=address_data.get('street'),
+                city=address_data.get('city'),
+                zipcode=address_data.get('zipcode'),
+                state=address_data.get('state'),
+                district_id=district.id if district else None
+            )
+            if address_obj:
+                address_obj = address_obj.last()
                 for key, val in address_data.items():
-                    setattr(address, key, val)
-                address.save()
+                    setattr(address_obj, key, val)
+                address_obj.save()
             else:
-                address = Address.objects.create(**address_data)
+                address_obj = Address.objects.create(**address_data)
             
-            instance.address = address
+            instance.address = address_obj
             instance.save(update_fields=['address'])
         
         if causes_data is None:
@@ -204,13 +236,16 @@ class SupporterSerializer(serializers.ModelSerializer):
         created_or_updated_cause_ids = set()
         for cause in causes_data:
             cause_id = cause.pop('id', None)
-            if (not cause_id) or (cause_id in existing_cause_ids):
-                cause_obj, created = instance.causes.update_or_create(
-                    pk=cause_id, defaults={**cause}
-                )
+            cause_obj = Cause.objects.filter(
+                tag=cause.get('tag'), name=cause.get('name')
+            )
+            if cause_obj:
+                cause_obj.update(**cause)
+                cause_obj = cause_obj.last()
+                if cause_obj.id not in existing_cause_ids:
+                    instance.causes.add(cause_obj)
             else:
-                Cause.objects.filter(id=cause_id).update(**cause)
-                cause_obj = Cause.objects.get(id=cause_id)
+                cause_obj = instance.causes.create(**cause)
                 instance.causes.add(cause_obj)
 
             created_or_updated_cause_ids.add(cause_obj.id)
