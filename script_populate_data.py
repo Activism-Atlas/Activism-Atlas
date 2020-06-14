@@ -35,7 +35,7 @@ def create_district():
     random_district_num = randint(1, 50)
 
     tag = 'D' + str(random_district_num)
-    name = ' District ' + str(random_district_num)
+    name = 'District ' + str(random_district_num)
 
     district, _ = District.objects.get_or_create(
         tag=tag,
