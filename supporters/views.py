@@ -6,6 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, viewsets, mixins, permissions
 from rest_framework.response import Response
 
+from .filters import SupporterFilter
 from .models import District, Supporter
 from .serializers import DistrictSerializer, SupporterSerializer
 
@@ -56,6 +57,7 @@ class SupporterViewSet(mixins.CreateModelMixin,
         filters.OrderingFilter,
         filters.SearchFilter
     )
+    filter_class = SupporterFilter
     ordering = ['-updated_on']
     ordering_fields = ['created_on', 'updated_on']
     permission_classes = [permissions.IsAuthenticated]
