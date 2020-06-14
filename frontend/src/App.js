@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'; // imports bootstrap
-import './App.css'; // imports styling, i also have some in Index.css, which shows too
 // import { BrowserRouter as withRouter,Router, Switch, Route, Link } from "react-router-dom"; // this is React Router, it creates routes & links for components 
 import { Route, BrowserRouter as Router, withRouter,Switch, Link} from 'react-router-dom';
-
-import Login from "./components/login";
-import SignUp from "./components/signup";
-import Home from "./components/home";
+import styles from './app.module.css';
+import Login from "./components/login/login";
+import SignUp from "./components/signup/signup";
+import Home from "./components/home/home";
 
 class App extends Component {
   constructor() {
@@ -28,6 +27,7 @@ class App extends Component {
     };
     const response = await fetch(fetchUrl, settings);
     const postData = await response.json();
+    console.log(postData)
     if (!!postData.error === true) return null // we will need to write some logic incase an error comes from the login attempt.
     localStorage.setItem("token", postData.token);
     await this.setState({
@@ -61,13 +61,14 @@ class App extends Component {
               </li>
             </ul>
           </div>
-        </div>
+      </div>
       </nav>
       {/* NavBar Ends */}
 
       {/* Rest of this is the routes: "/", "/login", "/signup" */}
-      <div className="mainBody-div">
-        <div className="mainBody-inner">
+
+      <div className={styles.mainBodyDiv}>
+
           <Switch>
           <Route exact path="/" render={(props) => (
               <Login {...props} handleLogin={this.handleLoginSubmit} />)} /> {/* handleLogin passed down to the login, to get the inputed info*/}
@@ -79,9 +80,11 @@ class App extends Component {
               <Home {...props}  />)} />
             {/* ^^might not need this */}
           </Switch>
+          </div>
+
         </div>
-      </div>
-    </div>
+
+
     </Router>
   );
   }
