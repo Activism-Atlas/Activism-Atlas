@@ -144,6 +144,10 @@ REST_FRAMEWORK = {
     ),
 }
 
+JWT_AUTH = { 
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+}
+
 # Cors Whitelisted URLs
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000/'
