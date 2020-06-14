@@ -47,3 +47,14 @@ class SupporterViewSet(mixins.CreateModelMixin,
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = SupporterSerializer
     queryset = Supporter.objects.all()
+    #allow searching of supporter by cause
+
+    def get_queryset(self):
+        print('tokenTest', self)
+        cause = self.request.query_params.get('cause', None)
+        if cause is not None:
+            queryset = queryset.filter(causes__tag=cause)
+
+        zip = self.request.query_params.get('zip', None)
+        if zip is not None:
+            queryset = queryset.filter(address__zipcode=zip)
