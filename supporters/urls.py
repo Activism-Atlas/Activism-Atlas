@@ -12,8 +12,8 @@ from . import views
 # *****************************************************************************
 
 router = SimpleRouter()
-
 router.register(r'districts', views.DistrictViewSet)
+router.register(r'supporters', views.SupporterViewSet)
 
 # *****************************************************************************
 # urlconfs
