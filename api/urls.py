@@ -9,7 +9,6 @@ from django.contrib import admin
 # urlpatterns
 # *****************************************************************************
 
-# TODO: Add app urls
-# urlpatterns = [
-#     url(r'^', include('xxx', namespace='xxx')),
-# ]
+urlpatterns = [
+    url(r'^', include('supporters.urls', namespace='supporters')),
+]
