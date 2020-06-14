@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'; // imports bootstrap
-// import { BrowserRouter as withRouter,Router, Switch, Route, Link } from "react-router-dom"; // this is React Router, it creates routes & links for components 
 import { Route, BrowserRouter as Router, Redirect, withRouter, Switch} from 'react-router-dom';
 import styles from './app.module.css';
 import Login from "./components/login/login";
@@ -13,15 +12,17 @@ class App extends Component {
     super();
     this.state = {
       loggedIn: null, // this is keep tracking of the current user.
+      supporters: []
     };
   };
 
+  
 
   handleLoginSubmit = async (event, loginInfo) => {
     event.preventDefault();
     const fetchUrl = "http://localhost:8000/auth/token";
     const settings = {
-      method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" },
+      method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json"},
       body: JSON.stringify({username: loginInfo.username,password: loginInfo.password})
     };
     const response = await fetch(fetchUrl, settings);
@@ -29,8 +30,11 @@ class App extends Component {
     console.log(postData)
     if (!!postData.error === true) return null // we will need to write some logic incase an error comes from the login attempt.
     localStorage.setItem("token", postData.token);
-    await this.setState({loggedIn: true})
-    this.props.history.push("/home"); // go to route but doesn't render the component when you login
+    this.setState({loggedIn: true})
+    this.fetchSupporters()
+    if(this.state.loggedIn){
+      this.props.history.push("/home");
+      console.log('Successfully Login');}  // go to route but doesn't render the component when you login
   };
 
   handleLogout = async () => {
@@ -40,6 +44,19 @@ class App extends Component {
     this.props.history.push("/login");
   }
 
+  fetchSupporters = async () => {
+    let fetchUrl = "http://localhost:8000/api/supporters/"
+    let token = localStorage.getItem("token")
+    let settings = {
+      method: "GET", headers: { "Content-Type": "application/json", Accept: "application/json", Authorization : `Bearer ${token}`}
+    };
+    let response = await fetch(fetchUrl, settings);
+    let apiData = await response.json();
+    this.setState({
+      supporters: apiData
+    })
+    
+  }
 
 
   render() {
@@ -63,7 +80,7 @@ class App extends Component {
                 <SignUp {...props} handleSignup={this.handleSignupSubmit} />)} />  {/* handleSignUp passed down to the login, to get the inputed info*/}
               {(this.state.loggedIn) ? (
                 <Route exact path="/home" render={(props) => (
-                  <Home {...props} />)} />
+                  <Home {...props} supporters={this.state.supporters}/>)} />
               ) : (
                   <Redirect to="/login" />
                 )}
