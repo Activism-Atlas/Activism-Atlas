@@ -25,7 +25,8 @@ class DistrictViewSet(mixins.CreateModelMixin,
 
     """
 
-    filter_backend = (
+    filter_backends = (
+        DjangoFilterBackend,
         filters.OrderingFilter,
         filters.SearchFilter
     )
@@ -52,7 +53,7 @@ class SupporterViewSet(mixins.CreateModelMixin,
 
     """
 
-    filter_backend = (
+    filter_backends = (
         DjangoFilterBackend,
         filters.OrderingFilter,
         filters.SearchFilter
