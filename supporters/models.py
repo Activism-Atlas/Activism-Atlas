@@ -95,7 +95,6 @@ class Supporter(models.Model):
     causes = models.ManyToManyField(
         Cause, 
         blank=True, 
-        null=True, 
         related_name='supporters'
     )
     created_on = models.DateTimeField(auto_now_add=True)
