@@ -101,6 +101,11 @@ class SupporterSerializer(serializers.ModelSerializer):
 
     """
 
+    id = serializers.IntegerField(required=False)
+    first_name = serializers.CharField(required=False)
+    last_name = serializers.CharField(required=False)
+    email = serializers.EmailField(required=True)
+    phonenumber = serializers.CharField(required=False)
     address = AddressSerializer(required=False)
     causes = CauseSerializer(required=False, many=True)
 
