@@ -1,14 +1,8 @@
-from django.shortcuts import render
-
-# Create your views here.
-from django.shortcuts import render
-
-# Create your views here.
 # *****************************************************************************
 # supporters/views.py
 # *****************************************************************************
 
-from rest_framework import viewsets, mixins, permissions
+from rest_framework import filters, viewsets, mixins, permissions
 from rest_framework.response import Response
 
 from .models import District, Supporter
@@ -29,9 +23,17 @@ class DistrictViewSet(mixins.CreateModelMixin,
 
     """
 
+    filter_backend = (
+        filters.OrderingFilter,
+        filters.SearchFilter
+    )
+    ordering = ['-updated_on']
+    ordering_fields = ['created_on', 'updated_on']
     permission_classes = [permissions.IsAuthenticated]
     queryset = District.objects.all()
+    search_fields = ['name', 'tag']
     serializer_class = DistrictSerializer
+
 
 # *****************************************************************************
 # SupporterViewSet
@@ -47,17 +49,17 @@ class SupporterViewSet(mixins.CreateModelMixin,
     A ViewSet to CREATE, LIST, UPDATE, and RETRIEVE districts
 
     """
+
+    filter_backend = (
+        filters.OrderingFilter,
+        filters.SearchFilter
+    )
+    ordering = ['-updated_on']
+    ordering_fields = ['created_on', 'updated_on']
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = SupporterSerializer
     queryset = Supporter.objects.all()
-    #allow searching of supporter by cause
-
-    def get_queryset(self):
-        print('tokenTest', self)
-        cause = self.request.query_params.get('cause', None)
-        if cause is not None:
-            queryset = queryset.filter(causes__tag=cause)
-
-        zip = self.request.query_params.get('zip', None)
-        if zip is not None:
-            queryset = queryset.filter(address__zipcode=zip)
+    search_fields = [
+        'first_name', 'last_name', 'email', 'address__district__tag',
+        'address__district__name', 'causes__tags', 'causes__name'
+    ]
+    serializer_class = SupporterSerializer
