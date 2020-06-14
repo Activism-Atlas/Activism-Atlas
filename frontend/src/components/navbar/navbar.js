@@ -3,18 +3,16 @@ import { Link } from "react-router-dom";
 import svg from "./navbarIcon.svg";
 
 function Navbar(props) {
-  console.log(props);
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-light">
         <div className="container mx-0 px-0">
-          <Link
+          <div
             className="navbar-brand d-flex align-contents-center"
-            to={"/home"}
           >
             <img src={svg} className="img-fluid mr-2" />
             <h4 className="my-auto">ACTIVISM ATLAS</h4>
-          </Link>
+          </div>
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav ml-auto">
               {!props.loggedIn ? (

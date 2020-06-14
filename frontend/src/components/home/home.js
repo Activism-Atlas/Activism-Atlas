@@ -4,10 +4,7 @@ import styles from './home.module.css';
 import SupporterModal from '../modal/supportermodal'
 
 function home(props) {
-  // console.log(props.supporters)
-
-  const table = props.supporters.map((supporter) => {
-    console.log(supporter.causes.map((cause) => cause.name));
+  const table = props.supporters.map(supporter => {
     return (
       <tr className={styles.bgColor}>
         <td>Yes</td>

@@ -29,6 +29,7 @@ class App extends Component {
       }
       const postData = await response.json();
       localStorage.setItem("token", postData.token);
+      this.fetchSupporters()
       this.setState({loggedIn: true});
     }
     catch(e) {
@@ -49,6 +50,7 @@ class App extends Component {
     };
     let response = await fetch(fetchUrl, settings);
     let apiData = await response.json();
+    console.log(apiData)
     this.setState({
       supporters: apiData
     })
@@ -69,7 +71,7 @@ class App extends Component {
               <Route exact path="/signup" render={(props) => (
                 <SignUp {...props} handleSignup={this.handleSignupSubmit} />)} />  {/* handleSignUp passed down to the login, to get the inputed info*/}
               <Route exact path="/home" render={(props) => (
-                <Home {...props} />)} />
+                <Home {...props} supporters={this.state.supporters}/>)} />
             </Switch>
             {(!this.state.loggedIn) ? <Redirect to="/login" /> : <Redirect to="/home" />}
           </div>
