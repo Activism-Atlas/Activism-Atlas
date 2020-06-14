@@ -55,6 +55,41 @@ class App extends Component {
     })
   }
 
+  // handleSupporterSubmit = async (event, supporterInfo) => {
+  //   const [first_name,
+  //     last_name,
+  //     email,
+  //     phonenumber,
+  //     address,
+  //     causes] = supporterInfo;
+  //   event.preventDefault();
+  //   try {
+  //     const fetchUrl = "http://localhost:8000/api/supporters/";
+  //     let token = localStorage.getItem("token")
+  //     const settings = {
+  //       method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json", Authorization: `Bearer ${token}` },
+  //       body: JSON.stringify({
+  //         first_name,
+  //         last_name,
+  //         email,
+  //         phonenumber,
+  //         address,
+  //         causes
+  //       })
+  //     };
+  //     const response = await fetch(fetchUrl, settings);
+  //     if (!response.ok) {
+  //       throw new Error('Invalid supporter information');
+  //     }
+  //     const postData = await response.json();
+  //     this.setState({ supporters: postData, ...this.state });
+  //   }
+  //   catch (e) {
+  //     console.log(e.message);
+  //   }
+  // };
+
+
   render() {
     return (
       <Router>
@@ -67,10 +102,8 @@ class App extends Component {
                 <Login {...props} handleLogin={this.handleLoginSubmit} />)} /> {/* handleLogin passed down to the login, to get the inputed info*/}
               <Route exact path="/login" render={(props) => (
                 <Login {...props} handleLogin={this.handleLoginSubmit} />)} />
-              <Route exact path="/signup" render={(props) => (
-                <SignUp {...props} handleSignup={this.handleSignupSubmit} />)} />  {/* handleSignUp passed down to the login, to get the inputed info*/}
               <Route exact path="/home" render={(props) => (
-                <Home {...props} supporters={this.state.supporters}/>)} />
+                <Home {...props} supporters={this.state.supporters} handleSupporterSubmit={this.handleSupporterSubmit}/>)} />
             </Switch>
             {(!this.state.loggedIn) ? <Redirect to="/login" /> : <Redirect to="/home" />}
           </div>
