@@ -74,6 +74,11 @@ class CauseSerializer(serializers.ModelSerializer):
 
     """
 
+    id = serializers.IntegerField(required=False)
+    tag = serializers.CharField(required=True)
+    name = serializers.CharField(required=True)
+    description = serializers.CharField(required=False)
+
     class Meta:
         model = models.Cause
         fields = (
