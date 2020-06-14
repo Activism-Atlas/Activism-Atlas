@@ -6,7 +6,7 @@ function Navbar(props) {
   console.log(props);
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-light fixed-top">
+      <nav className="navbar navbar-expand-lg navbar-light">
         <div className="container mx-0 px-0">
           <Link
             className="navbar-brand d-flex align-contents-center"

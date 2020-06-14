@@ -1,26 +1,35 @@
-import React from 'react'
-import { Table, Form, Button, Dropdown } from 'react-bootstrap';
-import styles from './home.module.css';
+import React from "react";
+import { Table, Form, Button, Dropdown } from "react-bootstrap";
+import styles from "./home.module.css";
 
 function home(props) {
   // console.log(props.supporters)
 
-  const table = props.supporters.map(supporter => {
-    console.log(supporter.causes.map(cause => cause.name))
+  const table = props.supporters.map((supporter) => {
+    console.log(supporter.causes.map((cause) => cause.name));
     return (
       <tr className={styles.bgColor}>
         <td>Yes</td>
-        <td>{supporter.first_name}, {supporter.last_name}</td>
+        <td>
+          {supporter.first_name}, {supporter.last_name}
+        </td>
         <td>{supporter.phonenumber}</td>
         <td>{supporter.email}</td>
-        <td> {supporter.address.city}, {supporter.address.state}</td>
-        <td>{supporter.causes.map((cause, index) => (index ? ', ' : '') + cause.name)}</td>
+        <td>
+          {" "}
+          {supporter.address.city}, {supporter.address.state}
+        </td>
+        <td>
+          {supporter.causes.map(
+            (cause, index) => (index ? ", " : "") + cause.name
+          )}
+        </td>
         {/* <td> </td>
             <td>created today</td>
             <td>updated today</td> */}
       </tr>
-    )
-  })
+    );
+  });
 
   return (
     <div className={styles.home}>
@@ -29,7 +38,7 @@ function home(props) {
           <Form inline>
             <Form.Label htmlFor="inlineFormInputName2" srOnly>
               Zip
-          </Form.Label>
+            </Form.Label>
             <Form.Control
               className="mb-2 mr-sm-1"
               id="formZip"
@@ -40,7 +49,7 @@ function home(props) {
               className="mb-2 mr-4 bg-secondary border-0 text-light"
             >
               Search
-          </Button>
+            </Button>
           </Form>
 
           <Dropdown>
@@ -50,7 +59,7 @@ function home(props) {
               id="dropdown-basic"
             >
               Causes
-          </Dropdown.Toggle>
+            </Dropdown.Toggle>
 
             <Dropdown.Menu>
               <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
@@ -66,26 +75,26 @@ function home(props) {
             className="mb-2 bg-secondary border-0 text-light"
           >
             Add Supporter
-        </Button>
+          </Button>
         </div>
       </div>
 
-      <Table bordered hover className={styles.bgColor}>
-        <thead>
-          <tr>
-            <th scope="col">ACTIVE</th>
-            <th scope="col">NAME</th>
-            <th scope="col">PHONE</th>
-            <th scope="col">EMAIL</th>
-            <th scope="col">LOCATION</th>
-            <th scope="col">CAUSES</th>
-          </tr>
-        </thead>
-        <tbody>
-          {table}
-        </tbody>
-      </Table>
-    </div >
-  )
+      <div className="mx-4">
+        <Table borderless hover className={styles.bgColor}>
+          <thead>
+            <tr>
+              <th scope="col">ACTIVE</th>
+              <th scope="col">NAME</th>
+              <th scope="col">PHONE</th>
+              <th scope="col">EMAIL</th>
+              <th scope="col">LOCATION</th>
+              <th scope="col">CAUSES</th>
+            </tr>
+          </thead>
+          <tbody>{table}</tbody>
+        </Table>
+      </div>
+    </div>
+  );
 }
 export default home;
