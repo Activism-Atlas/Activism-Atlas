@@ -4,7 +4,7 @@ export default class Login extends Component {
     constructor() {
         super();
         this.state = {
-          email: "",
+          username: "",
           password: "",
         };
       }
@@ -18,8 +18,8 @@ export default class Login extends Component {
                 <h3>Login In</h3>
 
                 <div className="form-group">
-                    <label>Email address</label>
-                    <input type="email" className="form-control" name="email" onChange={e => this.handleChange(e)} value={this.state.email} placeholder="Enter email" />
+                    <label>username address</label>
+                    <input type="username" className="form-control" name="username" onChange={e => this.handleChange(e)} value={this.state.username} placeholder="Enter email" />
                 </div>
 
                 <div className="form-group">

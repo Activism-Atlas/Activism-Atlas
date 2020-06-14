@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'; // imports bootstrap
 import './App.css'; // imports styling, i also have some in Index.css, which shows too
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"; // this is React Router, it creates routes & links for components 
+// import { BrowserRouter as withRouter,Router, Switch, Route, Link } from "react-router-dom"; // this is React Router, it creates routes & links for components 
+import { Route, BrowserRouter as Router, withRouter,Switch, Link} from 'react-router-dom';
 
 import Login from "./components/login";
 import SignUp from "./components/signup";
@@ -18,59 +19,31 @@ class App extends Component {
 
   handleLoginSubmit = async (event, loginInfo) => {
     event.preventDefault();
-    console.log(loginInfo);
-    // const fetchUrl = "http://localhost:3000/login";
-    // const settings = {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Accept: "application/json"
-    //   },
-    //   body: JSON.stringify({
-    //     auth: {
-    //       user_name: loginInfo.user_name,
-    //       password: loginInfo.password
-    //     }
-    //   })
-    // };
-    // const response = await fetch(fetchUrl, settings);
-    // const postData = await response.json();
-    // // console.log(postData)
-    // if (!!postData.error === true) return null
-    // localStorage.setItem("token", postData.jwt);
-    // await this.setState({
-    //   currentUser: {
-    //     id: Number(postData.user.data.id),
-    //     ...postData.user.data.attributes
-    //   }
-    // })
-    
-    this.props.history.push("/home")
+    const fetchUrl = "http://localhost:8000/auth/token";
+    const settings = {method: "POST",headers: { "Content-Type": "application/json", Accept: "application/json"},
+      body: JSON.stringify({
+          username: loginInfo.username,
+          password: loginInfo.password
+      })
+    };
+    const response = await fetch(fetchUrl, settings);
+    const postData = await response.json();
+    if (!!postData.error === true) return null // we will need to write some logic incase an error comes from the login attempt.
+    localStorage.setItem("token", postData.token);
+    await this.setState({
+      currentUser: {
+        username: loginInfo.username
+      }
+    })
+    this.props.history.push("/home") // go to route but doesnt render the component when you login
   };
 
-  handleSignupSubmit = async (event, signupInfo) => {
-    event.preventDefault();
-    console.log(signupInfo);
-    // const fetchUrl = "http://localhost:3000/signup";
-    // const settings = {method: "POST",headers: {"Content-Type": "application/json",Accept: "application/json"},
-    //   body: JSON.stringify({user: signupInfo})
-    // };
-    // const response = await fetch(fetchUrl, settings);
-    // const postData = await response.json();
-    // if (!!postData.error === true) return null
-    // console.log(postData.error)
-    // localStorage.setItem("token", postData.jwt);
-    // this.setState(
-    //   {currentUser: {
-    //       id: Number(postData.user.data.id),
-    //       ...postData.user.data.attributes
-    //     }
-    //   });
-    //   this.props.history.push("/home")
-  };
+
 
 
   render(){
+    console.log(this.state)
+    console.log(this.props)
   return (
   <Router> 
     {/* Top NavBar Starts here, with the "Activism Atlas" routing to homepage */}
@@ -102,7 +75,8 @@ class App extends Component {
               <Login {...props} handleLogin={this.handleLoginSubmit} />)} />
             <Route exact path="/signup" render={(props) => (
               <SignUp {...props} handleSignup={this.handleSignupSubmit} />)} />  {/* handleSignUp passed down to the login, to get the inputed info*/}
-              <Route exact path="/home" component={Home} />
+               <Route exact path="/home" render={(props) => (
+              <Home {...props}  />)} />
             {/* ^^might not need this */}
           </Switch>
         </div>
@@ -114,4 +88,4 @@ class App extends Component {
 }
 
 
-export default App;
+export default withRouter(App);
