@@ -3,11 +3,12 @@
 # *****************************************************************************
 
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, viewsets, mixins, permissions
+from rest_framework import filters, viewsets, mixins, permissions, status
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .filters import SupporterFilter
-from .models import District, Supporter
+from .models import Cause, District, Supporter
 from .serializers import DistrictSerializer, SupporterSerializer
 
 # *****************************************************************************
@@ -68,3 +69,26 @@ class SupporterViewSet(mixins.CreateModelMixin,
         'address__district__name', 'causes__tags', 'causes__name'
     ]
     serializer_class = SupporterSerializer
+
+    @action(detail=False)
+    def stats(self, request):
+        """
+        Returns the counts of supporters who follow a given cause
+
+        """
+
+        queryset = self.get_queryset()
+        cause_names = Cause.objects.values_list('name', flat=True)
+
+        stats = {}
+        for cause_name in cause_names:
+            num_supporters = Supporter.objects.filter(
+                causes__name=cause_name
+            ).count()
+            
+            if stats.get(cause_name):
+                stats[cause_name] += num_supporters
+            else:
+                stats[cause_name] = num_supporters
+            
+        return Response(stats, status.HTTP_200_OK)
