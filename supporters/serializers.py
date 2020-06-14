@@ -18,6 +18,10 @@ class DistrictSerializer(serializers.ModelSerializer):
 
     """
 
+    id = serializers.IntegerField(required=False)
+    tag = serializers.CharField(required=True)
+    name = serializers.CharField(required=True)
+
     class Meta:
         model = models.District
         fields = (
